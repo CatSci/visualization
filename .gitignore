@@ -26,6 +26,9 @@ share/python-wheels/
 *.egg
 MANIFEST
 data/
+plots/
+notebooks/
+saved_plots/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

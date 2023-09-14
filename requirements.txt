@@ -1,0 +1,8 @@
+openpyxl
+seaborn
+plotly
+nbformat
+scikit-learn
+streamlit==1.12.0
+altair==4.2.2
+-e .
