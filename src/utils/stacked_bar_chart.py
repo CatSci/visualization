@@ -7,7 +7,7 @@ import pandas as pd
 from src.utils.utils import generate_colors
 
 
-def create_stacked_bar_chart(df, x_columns, y_columns):
+def create_stacked_bar_chart(df, x_columns, y_columns, hover_data):
     """_summary_
 
     Args:
