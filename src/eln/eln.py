@@ -10,10 +10,10 @@ import streamlit as st
 from IPython.display import Image
 
 
-# API_BASE_URL = 'https://catsci.signalsnotebook.perkinelmercloud.eu/api/rest/v1.0/adt/'
-API_KEY = 'NvPkEXLMW96UwVjsF+dDAjs8CROAtlXFG9dc9o38HTTZ/6dTIrV1sWELAa0vRvVqHHawTg=='
 
-API_BASE_URL = 'https://catsci-sandbox.signalsnotebook.perkinelmercloud.eu/api/rest/v1.0/entities/experiment%3Abe685e48-2593-4e74-8ad4-9d8b2dc36514/children/a.png?force=true' \
+API_KEY = ''
+
+API_BASE_URL = '' 
 
 
 def update_plot(path):
