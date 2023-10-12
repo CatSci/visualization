@@ -5,6 +5,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 from src.utils.utils import generate_colors
+import io, tempfile, base64
 
 
 

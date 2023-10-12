@@ -5,31 +5,74 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 from src.utils.utils import generate_colors
+import io 
+from src.eln.eln import update_plot, update_plot_plotly
+
+
+
+def index_cols(dataframe: pd.DataFrame) -> list:
+    """
+    Args:
+        df (_type_): _description_
+    """
+    # Get all columns with object data type
+    object_columns = list(dataframe.select_dtypes(include=['object']).columns)
+
+    # Filter out columns containing "SM," "Pdt," or "Im"
+    index_columns = [
+        col for col in object_columns 
+        if not any(keyword in col for keyword in ["SM", "Pdt", "Im"])
+    ]
+    return index_columns
+
+
+
+def numeric_columns(dataframe: pd.DataFrame) -> list:
+    """_summary_
+
+    Args:
+        dataframe (pd.DataFrame): _description_
+
+    Returns:
+        list: _description_
+    """
+    # Get the numeric columns
+    numeric_columns = list(dataframe.select_dtypes(include=['int64', 'float64']).columns)
+    # Get the columns containing "SM," "Pdt," or "Im" without duplicates and in the order of appearance
+    numeric_obj_columns = []
+    for col in dataframe.columns:
+        if (
+            any(keyword in col for keyword in ["SM", "Pdt", "Im"]) 
+            and col not in numeric_obj_columns 
+            and col not in numeric_columns
+        ):
+            numeric_obj_columns.append(col)
+    # Combine numeric and additional columns while removing duplicates
+    all_numeric_columns = numeric_columns + numeric_obj_columns
+    
+    return all_numeric_columns
+
+
+
 
 def create_heatmap(df):
-    st.info('Please select Experiment # column first', icon="ℹ️")
-    st.sidebar.header("Heatmap Options")
-    
-    # time_points = [col for col in df.columns if "Pdt" in col or "SM" in col]
+    # st.info('Please select Experiment # column first', icon="ℹ️")
+    st.sidebar.header("Heatmap Options") 
 
-    df = df.astype(str)
-
-    # selected_index_rows = st.sidebar.multiselect("Select rows for Heatmap", 
-    #                                              [col for col in df.columns if df[col].dtype == 'object' and not any(exclude in col for exclude in ["SM", "Pdt", "Im", "Unnamed"])])
-
-    # # Select time points to display in the heatmap
-    # selected_time_points = st.sidebar.multiselect("Select Time Points", time_points)
+    index_columns = index_cols(dataframe= df)
+    all_numeric_columns = numeric_columns(dataframe= df)
 
     # to provide all column for x and y axis
-    selected_index_rows = st.sidebar.multiselect("Select rows for Heatmap", 
-                                                 [col for col in df.columns])
-    selected_time_points = st.sidebar.multiselect("Select Time Point", [col for col in df.columns])
-    
+    selected_index_rows = st.sidebar.multiselect("Select rows for Heatmap", index_columns)
+    selected_time_points = st.sidebar.multiselect("Select Time Point", all_numeric_columns)
 
+    if 'Exp #' not in selected_index_rows:
+        selected_index_rows.insert(0, 'Exp #')
+    
+    # st.write(selected_index_rows)
     if selected_time_points:
         # Specify the desired order of experiments
-        experiment_order = df['Exp #'].unique()  # Replace with the desired order
-        
+        experiment_order = df['Exp #']  # Replace with the desired order
 
         heatmap_data = pd.pivot_table(df,
             index=selected_index_rows, 
@@ -68,6 +111,19 @@ def create_heatmap(df):
 
             # Display the heatmap using Streamlit by passing the Matplotlib figure
             st.pyplot(plt.gcf())  # Pass the current figure (gcf)
+
+            # Instead of displaying the plot, save it as a binary image
+            plot_binary = io.BytesIO()
+            plt.savefig(plot_binary, format='png')
+            plot_binary.seek(0)  # Move the stream pointer to the beginning
+            # Close the plot to release resources
+            plt.close()
+            
+            # if st.button('upload to eln'):
+            #     update_plot(plot_binary)
+            
+
+            return plot_binary
         else:
             st.warning("No data available for the selected options")
     else:
