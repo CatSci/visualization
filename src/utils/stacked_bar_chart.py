@@ -4,10 +4,6 @@ import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
-from src.utils.utils import generate_colors
-import io, base64
-import plotly.io as pio
-import requests
 import plotly.offline as pyo
 
 

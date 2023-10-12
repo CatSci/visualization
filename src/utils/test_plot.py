@@ -1,10 +1,7 @@
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import style
 import streamlit as st
-import plotly.graph_objects as go
-import plotly.express as px
 import seaborn as sns
 
 def create_bar_chart(df, x_columns, y_columns, stacked_bar):
