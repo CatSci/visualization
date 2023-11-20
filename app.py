@@ -5,9 +5,10 @@ import plotly.graph_objects as go
 
 
 # from src.saved_plots.test import create_stacked_bar_chart, create_heatmap, create_bar_plot, create_scatter_plot
-from src.utils.test_plot import create_bar_chart
+from src.utils.bar_plot import create_bar_chart
 from src.utils.heatmap import create_heatmap
 from src.utils.scatter_plot import create_scatter_plot
+from src.utils.line_plot import create_line_plot
 
 
 hide_st_Style = """
@@ -43,7 +44,7 @@ if uploaded_file is not None:
     df.replace('-', 0, inplace= True)
 
     # Select plot type
-    plot_type = st.sidebar.selectbox("Select Plot Type", ["Heatmap", "Scatter Plot", "Bar Chart"])
+    plot_type = st.sidebar.selectbox("Select Plot Type", ["Heatmap", "Scatter Plot", "Line Plot","Bar Chart"])
 
     # Plot based on selected options
     ##### Stacked Bar Chart plot #####
@@ -68,6 +69,9 @@ if uploaded_file is not None:
     #### Scatter Plot ####
     if plot_type == "Scatter Plot":
         create_scatter_plot(df)
+
+    if plot_type == "Line Plot":
+        create_line_plot(df= df)
 
 
 else:

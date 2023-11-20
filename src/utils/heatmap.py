@@ -64,7 +64,7 @@ def create_heatmap(df):
 
     # to provide all column for x and y axis
     selected_index_rows = st.sidebar.multiselect("Select rows for Heatmap", index_columns)
-    selected_time_points = st.sidebar.multiselect("Select Time Point", all_numeric_columns)
+    selected_time_points = st.sidebar.multiselect("Select column for Heatmap", all_numeric_columns)
 
     if 'Exp #' not in selected_index_rows:
         selected_index_rows.insert(0, 'Exp #')
@@ -94,7 +94,7 @@ def create_heatmap(df):
             heatmap_data = heatmap_data.astype(float)
             # Create a Seaborn heatmap with custom aesthetics
             plt.figure(figsize=(18, 15))
-            sns.set(font_scale=2)  # Adjust font size
+            sns.set(font_scale=2.5)  # Adjust font size
             
             # Customize the color bar appearance to add some gap
             cbar_kws = {
@@ -105,9 +105,10 @@ def create_heatmap(df):
 
             sns.heatmap(data=heatmap_data, cmap='YlOrBr', annot=True, fmt=".2f", cbar=True,
                         linewidths=0.5, linecolor='black', cbar_kws=cbar_kws)
-            plt.xlabel('Time Points')
             plt.ylabel(selected_index_rows)
-            plt.title(f'Concentrations with different {selected_index_rows} ')
+            plt.title(f'Output with different {selected_index_rows} ', pad= 30)
+            # Adjust x-axis ticks and label position
+            plt.tick_params(axis='x', which='both', bottom=False, top=True, labelbottom=False, labeltop=True)
 
             # Display the heatmap using Streamlit by passing the Matplotlib figure
             st.pyplot(plt.gcf())  # Pass the current figure (gcf)

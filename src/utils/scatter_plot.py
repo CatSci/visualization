@@ -4,8 +4,6 @@ import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
-import plotly.io as pio
-from src.utils.utils import generate_colors
 
 
 
@@ -34,32 +32,39 @@ def create_scatter_plot(df: pd.DataFrame):
     
     if size_column == 'None':
         size_column = None
+    sns.set(font_scale=1.5)
+    fig, ax = plt.subplots(figsize=(12, 10))
+    chart = sns.scatterplot(data= df, x= x_axis, y= y_axis, hue= hue_column, size= size_column, sizes=(100, 300))
+    chart.set_xticklabels(chart.get_xticklabels(), rotation=45, horizontalalignment='right')
+    # chart.grid(False)
+    plt.legend(bbox_to_anchor=(1, 0.7), loc='upper left')
+    st.pyplot(plt.gcf())
 
-    # Create scatter plot
-    fig = px.scatter(
-        df,
-        x=x_axis,
-        y=y_axis,
-        color=hue_column,
-        size=size_column,
-        title=f"Scatter Plot: {x_axis} vs {y_axis}",
-    )
+    # # Create scatter plot
+    # fig = px.scatter(
+    #     df,
+    #     x=x_axis,
+    #     y=y_axis,
+    #     color=hue_column,
+    #     size=size_column,
+    #     title=f"Scatter Plot: {x_axis} vs {y_axis}",
+    # )
 
-    fig.update_layout(
-        xaxis_title=x_axis,
-        yaxis_title=y_axis,
-        showlegend=True,
-        legend_title=hue_column,
-        legend=dict(
-            x=1.02,  # Adjust the legend position
-        ),
-        margin=dict(l=0, r=50, b=50, t=50),  # Adjust the margins as needed
-        width=800,
-        height=600,
-        xaxis_showgrid=False,  # Remove x-axis grid lines
-        yaxis_showgrid=False,
-        plot_bgcolor="rgba(0, 0, 0, 0)",
-    )
+    # fig.update_layout(
+    #     xaxis_title=x_axis,
+    #     yaxis_title=y_axis,
+    #     showlegend=True,
+    #     legend_title=hue_column,
+    #     legend=dict(
+    #         x=1.02,  # Adjust the legend position
+    #     ),
+    #     margin=dict(l=0, r=50, b=50, t=50),  # Adjust the margins as needed
+    #     width=800,
+    #     height=600,
+    #     xaxis_showgrid=False,  # Remove x-axis grid lines
+    #     yaxis_showgrid=False,
+    #     plot_bgcolor="rgba(0, 0, 0, 0)",
+    # )
 
-    # # Show the plot
-    st.plotly_chart(fig)
+    # # # Show the plot
+    # st.plotly_chart(fig)
