@@ -141,4 +141,4 @@ def create_heatmap(df):
         else:
             st.warning("No data available for the selected options")
     else:
-        st.warning("Please select Time Points")
+        st.warning("Please select Data")

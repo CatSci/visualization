@@ -23,7 +23,7 @@ def create_line_plot(df: pd.DataFrame):
         chart = None
 
         for y_column in y_axis:
-            chart = sns.lineplot(data=df, x=x_axis, y=y_column, label=y_column, marker="o", dashes=False, ci= None)
+            chart = sns.lineplot(data=df, x=x_axis, y=y_column, label=y_column, marker="o", dashes=False, errorbar= None)
         
         chart.set_xticklabels(chart.get_xticklabels(), rotation=45, horizontalalignment='right')
         chart.grid(False)
