@@ -66,13 +66,28 @@ def create_heatmap(df):
     selected_index_rows = st.sidebar.multiselect("Select rows for Heatmap", index_columns)
     selected_time_points = st.sidebar.multiselect("Select column for Heatmap", all_numeric_columns)
 
-    if 'Exp #' not in selected_index_rows:
-        selected_index_rows.insert(0, 'Exp #')
-    
-    # st.write(selected_index_rows)
+    # add uid column to dataframe which will be unique
+    if any(col in df.columns for col in ["Exp #", "Exp"]):
+        if "Exp #" in df.columns and len(df["Exp #"].unique()) != len(df):
+            df["uid"] = range(1, len(df) + 1)
+            selected_index_rows.insert(0, 'uid')
+        elif "Exp" in df.columns and len(df["Exp"].unique()) != len(df):
+            df["uid"] = range(1, len(df) + 1)
+            selected_index_rows.insert(0, 'uid')
+        else:
+            if "Exp #" in df.columns:
+                selected_index_rows.insert(0, 'Exp #')
+            elif "Exp" in df.columns:
+                selected_index_rows.insert(0, 'Exp')
+    else:
+        df["uid"] = range(1, len(df) + 1)
+        selected_index_rows.insert(0, 'uid')
+
+
+    order = selected_index_rows[0]
     if selected_time_points:
         # Specify the desired order of experiments
-        experiment_order = df['Exp #']  # Replace with the desired order
+        experiment_order = df[order]  # Replace with the desired order
 
         heatmap_data = pd.pivot_table(df,
             index=selected_index_rows, 
@@ -80,7 +95,7 @@ def create_heatmap(df):
             aggfunc= 'first',
             fill_value=0  # Fill missing values with 0 or another appropriate value
         )
-        # st.write(heatmap_data)
+
         
         if not selected_index_rows:
             # If no rows are selected, keep the original order (no reindexing)
@@ -120,8 +135,6 @@ def create_heatmap(df):
             # Close the plot to release resources
             plt.close()
             
-            # if st.button('upload to eln'):
-            #     update_plot(plot_binary)
             
 
             return plot_binary

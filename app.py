@@ -9,6 +9,7 @@ from src.utils.bar_plot import create_bar_chart
 from src.utils.heatmap import create_heatmap
 from src.utils.scatter_plot import create_scatter_plot
 from src.utils.line_plot import create_line_plot
+from src.utils.grouped_stacked_bar_plot import create_stacked_bar_plot
 
 
 hide_st_Style = """
@@ -44,7 +45,7 @@ if uploaded_file is not None:
     df.replace('-', 0, inplace= True)
 
     # Select plot type
-    plot_type = st.sidebar.selectbox("Select Plot Type", ["Heatmap", "Scatter Plot", "Line Plot","Bar Chart"])
+    plot_type = st.sidebar.selectbox("Select Plot Type", ["Heatmap", "Scatter Plot", "Line Plot","Bar Chart", "Grouped Stacked Bar Chart"])
 
     # Plot based on selected options
     ##### Stacked Bar Chart plot #####
@@ -72,6 +73,16 @@ if uploaded_file is not None:
 
     if plot_type == "Line Plot":
         create_line_plot(df= df)
+
+
+    if plot_type == "Grouped Stacked Bar Chart":
+        grouped_column = st.sidebar.selectbox('Select column to group data', list(df.select_dtypes(include= ['object']).columns))
+        x_column = st.sidebar.selectbox('Select X-axis Column', list(df.select_dtypes(include= ['object']).columns))
+        y_column = st.sidebar.selectbox('Select Y-axis Column', list(df.select_dtypes(include=['int64', 'float64']).columns))
+        if grouped_column and x_column and y_column:
+            create_stacked_bar_plot(df, grouped_column, x_column, y_column)
+        else:
+            st.warning("Please select columns to plot data")
 
 
 else:

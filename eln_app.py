@@ -1,23 +1,17 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import plotly.graph_objects as go
-import tempfile, sys, io
-from PIL import Image
 
-# from src.saved_plots.test import create_stacked_bar_chart, create_heatmap, create_bar_plot, create_scatter_plot
 from src.utils.bar_plot import create_bar_chart
 from src.utils.heatmap import create_heatmap
 from src.utils.scatter_plot import create_scatter_plot
 from src.utils.line_plot import create_line_plot
 
-from src.eln.eln import update_plot, update_plot_plotly
+from src.eln.eln import update_plot
 import requests
-# from flask import request
 import json
 
-import plotly.io as pio
 import seaborn as sns
+
 
 hide_st_Style = """
                 <style>
@@ -29,13 +23,15 @@ st.markdown(hide_st_Style, unsafe_allow_html= True)
 
 
 
-
 # Custom CSS to reduce the top margin of the app name
 custom_css = """
 <style>
 h1 {
     margin-top: -5rem;
     font-size: 24px;
+}
+div.stButton > button:first-child {
+    color: #ed9439;
 }
 </style>
 """
@@ -66,6 +62,9 @@ if uploaded_file is not None:
         stacked_bar = st.sidebar.checkbox('Stacked Bar Chart')
         if x_columns and y_columns:
             create_bar_chart(df, x_columns, y_columns, stacked_bar)
+            if st.button('Upload to ELN'):
+                with st.spinner('Uploading plot to ELN...'):
+                    pass
         else:
             st.warning("Please select columns to plot data")
 
@@ -76,14 +75,21 @@ if uploaded_file is not None:
         plot_binary = create_heatmap(df)
         if st.button('Upload to ELN'):
             with st.spinner('Uploading plot to ELN...'):
-                update_plot(plot_binary)
+                pass
+                # update_plot(plot_binary)
 
     #### Scatter Plot ####
     if plot_type == "Scatter Plot":
         create_scatter_plot(df)
+        if st.button('Upload to ELN'):
+            with st.spinner('Uploading plot to ELN...'):
+                pass
 
     if plot_type == "Line Plot":
         create_line_plot(df= df)
+        if st.button('Upload to ELN'):
+            with st.spinner('Uploading plot to ELN...'):
+                pass
 
 else:
     st.warning("Upload a file to get started.")

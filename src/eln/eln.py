@@ -8,12 +8,11 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 
+from dotenv import load_dotenv
 
 
-API_KEY = ''
-
-API_BASE_URL = '' 
-
+API_KEY = os.getenv("API_KEY")
+API_BASE_URL = os.getenv("API_BASE_URL")
 
 def update_plot(path):
     # Define headers
