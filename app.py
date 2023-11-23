@@ -30,6 +30,10 @@ h1 {
     margin-top: -5rem;
     font-size: 24px;
 }
+div.stButton > button:first-child {
+    background-color: #ed9439;
+    color:#ffffff;
+}
 </style>
 """
 

@@ -3,6 +3,7 @@ seaborn
 nbformat
 python-dotenv
 scikit-learn
+plotly
 streamlit==1.12.0
 altair==4.2.2
 -e .
