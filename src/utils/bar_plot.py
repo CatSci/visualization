@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib import style
 import streamlit as st
 import seaborn as sns
+import io
 
 def create_bar_chart(df, x_columns, y_columns, stacked_bar):
     sns.set_style('dark')
@@ -27,7 +28,7 @@ def create_bar_chart(df, x_columns, y_columns, stacked_bar):
     plt.xlabel(x_columns, fontsize=16)  # Set the x-axis label font size
     plt.ylabel('Total', fontsize=16)  # Set the y-axis label font size
     plt.title('Bar Chart', fontsize=20)  # Set the title font size
-    
+    plt.tight_layout()
     # Set the font size of x-axis tick labels
     plt.xticks(fontsize=12, rotation=45, ha='right')
     
@@ -42,9 +43,17 @@ def create_bar_chart(df, x_columns, y_columns, stacked_bar):
         width = p.get_width()
         height = p.get_height()
         x, y = p.get_xy() 
-        ax.annotate(f'{height:.1f}', (x + width/2, y + height + 0.1), ha='center', fontsize=10)
+        ax.annotate(f'{height:.1f}', (x + width/2, y + height + 0.1), ha='center', fontsize=8)
 
     st.pyplot(fig)
+
+    plot_binary = io.BytesIO()
+    plt.savefig(plot_binary, format='png')
+    plot_binary.seek(0)
+    
+    plt.close()
+
+    return fig, plot_binary
 
 
 

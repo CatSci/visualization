@@ -55,16 +55,9 @@ def numeric_columns(dataframe: pd.DataFrame) -> list:
 
 
 
-def create_heatmap(df):
+def create_heatmap(df, selected_index_rows, selected_time_points):
     # st.info('Please select Experiment # column first', icon="ℹ️")
-    st.sidebar.header("Heatmap Options") 
-
-    index_columns = index_cols(dataframe= df)
-    all_numeric_columns = numeric_columns(dataframe= df)
-
-    # to provide all column for x and y axis
-    selected_index_rows = st.sidebar.multiselect("Select rows for Heatmap", index_columns)
-    selected_time_points = st.sidebar.multiselect("Select column for Heatmap", all_numeric_columns)
+    
 
     # add uid column to dataframe which will be unique
     if any(col in df.columns for col in ["Exp #", "Exp"]):
@@ -108,7 +101,7 @@ def create_heatmap(df):
             heatmap_data = heatmap_data.reindex(columns=selected_time_points)  # Reorder the columns
             heatmap_data = heatmap_data.astype(float)
             # Create a Seaborn heatmap with custom aesthetics
-            plt.figure(figsize=(18, 15))
+            fig, ax = plt.subplots(figsize=(18, 15))
             sns.set(font_scale=2.5)  # Adjust font size
             
             # Customize the color bar appearance to add some gap
@@ -124,7 +117,8 @@ def create_heatmap(df):
             plt.title(f'Output with different {selected_index_rows} ', pad= 30)
             # Adjust x-axis ticks and label position
             plt.tick_params(axis='x', which='both', bottom=False, top=True, labelbottom=False, labeltop=True)
-
+            # heatmap_data.set_yticklabels(heatmap_data.get_yticklabels(), rotation=0, ha="right")
+            plt.tight_layout()
             # Display the heatmap using Streamlit by passing the Matplotlib figure
             st.pyplot(plt.gcf())  # Pass the current figure (gcf)
 
@@ -133,11 +127,12 @@ def create_heatmap(df):
             plt.savefig(plot_binary, format='png')
             plot_binary.seek(0)  # Move the stream pointer to the beginning
             # Close the plot to release resources
-            plt.close()
+            
+            plt.close(fig)
             
             
 
-            return plot_binary
+            return fig, plot_binary
         else:
             st.warning("No data available for the selected options")
     else:

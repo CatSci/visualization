@@ -4,10 +4,11 @@ import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
+import io
 
 
 
-def create_scatter_plot(df: pd.DataFrame):
+def create_scatter_plot(x_axis_options, x_axis, y_axis, df: pd.DataFrame):
     """_summary_
 
     Args:
@@ -15,10 +16,9 @@ def create_scatter_plot(df: pd.DataFrame):
     """
     
     # Select columns for X-axis and Y-axis
-    x_axis_options = [col for col in df.columns]
-    y_axis_options = [col for col in df.columns]
-    x_axis = st.sidebar.selectbox("Select X-axis Column", x_axis_options)
-    y_axis = st.sidebar.selectbox("Select Y-axis Column", y_axis_options)
+    
+    # x_axis = st.sidebar.selectbox("Select X-axis Column", x_axis_options)
+    # y_axis = st.sidebar.selectbox("Select Y-axis Column", y_axis_options)
 
     # Select columns for hue, size, etc.
     # Exclude the selected x_axis from hue and size options
@@ -38,33 +38,13 @@ def create_scatter_plot(df: pd.DataFrame):
     chart.set_xticklabels(chart.get_xticklabels(), rotation=45, horizontalalignment='right')
     # chart.grid(False)
     plt.legend(bbox_to_anchor=(1, 0.7), loc='upper left')
+    plt.tight_layout()
     st.pyplot(plt.gcf())
 
-    # # Create scatter plot
-    # fig = px.scatter(
-    #     df,
-    #     x=x_axis,
-    #     y=y_axis,
-    #     color=hue_column,
-    #     size=size_column,
-    #     title=f"Scatter Plot: {x_axis} vs {y_axis}",
-    # )
+    plot_binary = io.BytesIO()
+    plt.savefig(plot_binary, format='png')
+    plot_binary.seek(0)
+    
+    plt.close()
 
-    # fig.update_layout(
-    #     xaxis_title=x_axis,
-    #     yaxis_title=y_axis,
-    #     showlegend=True,
-    #     legend_title=hue_column,
-    #     legend=dict(
-    #         x=1.02,  # Adjust the legend position
-    #     ),
-    #     margin=dict(l=0, r=50, b=50, t=50),  # Adjust the margins as needed
-    #     width=800,
-    #     height=600,
-    #     xaxis_showgrid=False,  # Remove x-axis grid lines
-    #     yaxis_showgrid=False,
-    #     plot_bgcolor="rgba(0, 0, 0, 0)",
-    # )
-
-    # # # Show the plot
-    # st.plotly_chart(fig)
+    return fig, plot_binary

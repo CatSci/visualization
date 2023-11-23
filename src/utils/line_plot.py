@@ -2,9 +2,9 @@ import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
+import io
 
-
-def create_line_plot(df: pd.DataFrame):
+def create_line_plot(x_axis, y_axis, df: pd.DataFrame):
     """_summary_
 
     Args:
@@ -12,10 +12,7 @@ def create_line_plot(df: pd.DataFrame):
     """
     
     # Select columns for X-axis and Y-axis
-    x_axis_options = [col for col in df.columns]
-    y_axis_options = [col for col in df.columns]
-    x_axis = st.sidebar.selectbox("Select X-axis Column", x_axis_options)
-    y_axis = st.sidebar.multiselect("Select Y-axis Column", y_axis_options)
+    fig, ax = plt.subplots(figsize=(8, 6))
     sns.set(rc={'font.size': 12}) 
     # Check if Y-axis is selected
     if y_axis:
@@ -30,8 +27,14 @@ def create_line_plot(df: pd.DataFrame):
         # Move the legend outside the plot
         # plt.legend(bbox_to_anchor=(1, 0.5), loc='upper left')
         plt.title(f"Line Plot for {y_axis}")
-
+        plt.tight_layout()
         st.pyplot(plt.gcf())
-    else:
-        # Display a message if Y-axis is not selected
-        st.warning("Select Y-axis to display the plot.")
+
+        plot_binary = io.BytesIO()
+        plt.savefig(plot_binary, format='png')
+        plot_binary.seek(0)
+        
+        plt.close()
+
+        return fig, plot_binary
+    

@@ -2,11 +2,11 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-
+import io
 
 # from src.saved_plots.test import create_stacked_bar_chart, create_heatmap, create_bar_plot, create_scatter_plot
 from src.utils.bar_plot import create_bar_chart
-from src.utils.heatmap import create_heatmap
+from src.utils.heatmap import create_heatmap, index_cols, numeric_columns
 from src.utils.scatter_plot import create_scatter_plot
 from src.utils.line_plot import create_line_plot
 from src.utils.grouped_stacked_bar_plot import create_stacked_bar_plot
@@ -33,6 +33,19 @@ h1 {
 </style>
 """
 
+def download_btn(binary_image):
+    file_name = st.text_input("Enter file name")
+    if file_name:
+        file_name = str(file_name) + ".png"
+        plt.savefig(file_name)
+        btn = st.download_button(
+                    label="Download image",
+                    data=binary_image,
+                    file_name=file_name,
+                    mime="image/png"
+                )
+
+
 # Add a title to your Streamlit app with HTML markup and apply custom CSS
 st.sidebar.markdown("<h1 style='text-align: center;'>CatSci</h1>" + custom_css, unsafe_allow_html=True)
 # Sidebar for data upload
@@ -58,21 +71,47 @@ if uploaded_file is not None:
         y_columns = st.sidebar.multiselect('Select Y-axis Column', list(df.select_dtypes(include=['int64', 'float64']).columns))
         stacked_bar = st.sidebar.checkbox('Stacked Bar Chart')
         if x_columns and y_columns:
-            create_bar_chart(df, x_columns, y_columns, stacked_bar)
+            fig, plot_binary = create_bar_chart(df, x_columns, y_columns, stacked_bar)
+            download_btn(binary_image= plot_binary)
         else:
             st.warning("Please select columns to plot data")
     
     ##### Heatmap plot #####
     if plot_type == "Heatmap":
-       create_heatmap(df)
-    
-    
+       st.sidebar.header("Heatmap Options")
+       index_columns = index_cols(dataframe= df)
+       all_numeric_columns = numeric_columns(dataframe= df)
+       selected_index_rows = st.sidebar.multiselect("Select rows for Heatmap", index_columns)
+       selected_time_points = st.sidebar.multiselect("Select column for Heatmap", all_numeric_columns)
+
+       if selected_index_rows and selected_time_points:
+        fig, plot_binary = create_heatmap(df = df, selected_index_rows= selected_index_rows, selected_time_points= selected_time_points)
+        download_btn(binary_image= plot_binary)
+       else:
+        st.warning("Please select Data")
+
+        
+        
     #### Scatter Plot ####
     if plot_type == "Scatter Plot":
-        create_scatter_plot(df)
+        x_axis_options = [col for col in df.columns]
+        y_axis_options = [col for col in df.columns]
+        x_axis = st.sidebar.selectbox("Select X-axis Column", x_axis_options)
+        y_axis = st.sidebar.selectbox("Select Y-axis Column", y_axis_options)
+        if x_axis and y_axis:
+            fig, plot_binary = create_scatter_plot(x_axis_options=x_axis_options, x_axis= x_axis, y_axis= y_axis, df = df)
+            download_btn(binary_image= plot_binary)
 
     if plot_type == "Line Plot":
-        create_line_plot(df= df)
+        x_axis_options = [col for col in df.columns]
+        y_axis_options = [col for col in df.columns]
+        x_axis = st.sidebar.selectbox("Select X-axis Column", x_axis_options)
+        y_axis = st.sidebar.multiselect("Select Y-axis Column", y_axis_options)
+        if x_axis and y_axis:
+            fig, plot_binary = create_line_plot(x_axis= x_axis, y_axis= y_axis, df= df)
+            download_btn(binary_image= plot_binary)
+        else:
+            st.warning("Select Y-axis to display the plot.")
 
 
     if plot_type == "Grouped Stacked Bar Chart":
@@ -80,7 +119,11 @@ if uploaded_file is not None:
         x_column = st.sidebar.selectbox('Select X-axis Column', list(df.select_dtypes(include= ['object']).columns))
         y_column = st.sidebar.selectbox('Select Y-axis Column', list(df.select_dtypes(include=['int64', 'float64']).columns))
         if grouped_column and x_column and y_column:
-            create_stacked_bar_plot(df, grouped_column, x_column, y_column)
+            fig = create_stacked_bar_plot(df, grouped_column, x_column, y_column)
+            # byte_img = io.BytesIO()
+            # fig.write_image(file = byte_img, format = "png")
+            # download_btn(binary_image= byte_img)
+            
         else:
             st.warning("Please select columns to plot data")
 

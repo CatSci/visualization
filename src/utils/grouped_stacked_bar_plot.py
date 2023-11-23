@@ -3,6 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import streamlit as st
+import io
 
 
 def create_stacked_bar_plot(dataframe, grouped_column, x_column, y_column):
@@ -17,7 +18,7 @@ def create_stacked_bar_plot(dataframe, grouped_column, x_column, y_column):
         xaxis=dict(title_text= str(grouped_column)),
         yaxis=dict(title_text= str(y_column)),
         barmode="stack",
-        height=800,  # Set the height of the figure
+        height=700,  # Set the height of the figure
         width=800,  # Set the width of the figure
         plot_bgcolor='white',  # Set the background color of the plot
         paper_bgcolor='white',  # Set the background color of the paper
@@ -37,9 +38,17 @@ def create_stacked_bar_plot(dataframe, grouped_column, x_column, y_column):
                 name=r,
                 marker_color=c,
                 textposition='inside',  # Adjust the position of text labels
+                width= 0.4,
             ),
         )
-    
+
     st.plotly_chart(fig)
+    
+    # fig_bytes = fig.to_image(format="png")
+    # plot_binary = io.BytesIO(fig_bytes)
+    # plt.savefig(plot_binary, format='png')
+    # plot_binary.seek(0)
+
+    return fig
 
 
