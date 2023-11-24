@@ -50,7 +50,37 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+    # Define the button style with custom CSS
+button_style = """
+        display: inline-block;
+            padding: 5px 20px;
+            background-color: #ed9439;’
+            color: #C5DFF8;
+            width: 200px;
+            height: 35px;
+            margin-top: 20px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px; 
+            border-radius: 8px;
+"""
+hover_effect = """
+        color: #111b2b;
+    """
 
+st.markdown(
+            f"""
+            <style>
+                .stButton > button {{
+                    {button_style}
+                }}
+                .stButton:hover > button {{
+                    {hover_effect}
+                }}
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
 
 query_params = st.experimental_get_query_params()
 eid = query_params['__eid'][0]
