@@ -31,29 +31,11 @@ h1 {
     font-size: 24px;
 }
 div.stButton > button:first-child {
-    color: #ed9439;
+    background-color: ed9439 !important
+    color: white;
 }
 </style>
 """
-# download button custom css
-st.markdown(f"""
-    <style>
-      [class="css-9pe4jm edgvbvh9"]{{
-            display: inline-block;
-            padding: 5px 20px;
-            background-color: #ed9439;’
-            color: #C5DFF8;
-            width: 200px;
-            height: 35px;
-            margin-top: 20px;
-            text-align: center;
-            text-decoration: none;
-            font-size: 16px; 
-            border-radius: 8px;’
-      }}
-      </style>
-    """
-    , unsafe_allow_html=True)
 # Apply HTML and CSS styling to the text input
 
 st.markdown(
@@ -74,15 +56,29 @@ query_params = st.experimental_get_query_params()
 eid = query_params['__eid'][0]
 
 
+# def upload_image_to_eln_btn(file):
+#     file_name = st.text_input("Enter file name")
+#     file_name = file_name + ".png"
+#     if file_name:
+#         if st.button('Upload to ELN'):
+#         #     with st.spinner('Uploading plot to ELN...'):
+#             update_plot(eid = eid, file_name= file_name, file = plot_binary)
+
 def upload_image_to_eln_btn(file):
-    file_name = st.text_input("Enter file name")
-    file_name = file_name + ".png"
-    if file_name:
-        if st.button('Upload to ELN'):
-        #     with st.spinner('Uploading plot to ELN...'):
-            update_plot(eid = eid, file_name= file_name, file = plot_binary)
+    with st.form(key='upload_form'):
+        file_name = st.text_input("Enter file name")
+        file_name = file_name + ".png"
 
+        # Add an empty slot to act as a placeholder for the submit button
+        submit_button = st.empty()
 
+        if submit_button.button('Upload to ELN'):
+            # Perform the upload action when the button is clicked
+            with st.spinner('Uploading plot to ELN...'):
+                update_plot(eid=eid, file_name=file_name, file=file)
+
+    # Add the form_submit_trigger to rerun the form when the button is clicked
+    st.form_submit_trigger(submit_button)
 
 
 # Add a title to your Streamlit app with HTML markup and apply custom CSS

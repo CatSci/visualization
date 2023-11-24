@@ -32,9 +32,9 @@ def update_plot(eid, file, file_name):
         response = requests.post(API_URL, headers=headers, data= file)
 
         if response.status_code == 201:
-            print("Success: The POST request was successful.")
+            st.success("Image is uploaded")
         else:
-            print(f"Error: The POST request returned status code {response.status_code}")
+            st.error(f"Error {response.status_code}")
     except Exception as e:
         print(f"Error: {str(e)}")
 
