@@ -55,7 +55,7 @@ st.sidebar.markdown("<h1 style='text-align: center;'>CatSci</h1>" + custom_css, 
 # Sidebar for data upload
 st.sidebar.header('Upload Data')
 uploaded_file = st.sidebar.file_uploader("Choose a file")
-threshold = 2
+
 if uploaded_file is not None:
     # Read uploaded CSV data
 
