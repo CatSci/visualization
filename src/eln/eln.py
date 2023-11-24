@@ -17,6 +17,8 @@ API_KEY = st.secrets["API_KEY"]
 API_BASE_URL = st.secrets["API_BASE_URL"]
 
 def update_plot(eid, file, file_name):
+    # Prepare the files parameter for the POST request
+    files = {'file': (file_name, file, 'image/png')}
     # Define headers
     headers = {
         'accept': 'application/vnd.api+json',
@@ -27,7 +29,7 @@ def update_plot(eid, file, file_name):
     try:
         API_URL = API_BASE_URL + eid + "/children/" + file_name + "?force=true"
 
-        response = requests.post(API_URL, headers=headers, data= file)
+        response = requests.post(API_URL, headers=headers, data= files)
 
         if response.status_code == 201:
             print("Success: The POST request was successful.")
