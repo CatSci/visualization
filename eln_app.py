@@ -56,29 +56,14 @@ query_params = st.experimental_get_query_params()
 eid = query_params['__eid'][0]
 
 
-# def upload_image_to_eln_btn(file):
-#     file_name = st.text_input("Enter file name")
-#     file_name = file_name + ".png"
-#     if file_name:
-#         if st.button('Upload to ELN'):
-#         #     with st.spinner('Uploading plot to ELN...'):
-#             update_plot(eid = eid, file_name= file_name, file = plot_binary)
-
 def upload_image_to_eln_btn(file):
-    with st.form(key='upload_form'):
-        file_name = st.text_input("Enter file name")
-        file_name = file_name + ".png"
+    file_name = st.text_input("Enter file name")
+    file_name = file_name + ".png"
+    if file_name and st.button("Upload to ELN"):
+        with st.spinner('Uploading plot to ELN...'):
+            update_plot(eid = eid, file_name= file_name, file = plot_binary)
 
-        # Add an empty slot to act as a placeholder for the submit button
-        submit_button = st.empty()
 
-        if submit_button.button('Upload to ELN'):
-            # Perform the upload action when the button is clicked
-            with st.spinner('Uploading plot to ELN...'):
-                update_plot(eid=eid, file_name=file_name, file=file)
-
-    # Add the form_submit_trigger to rerun the form when the button is clicked
-    st.form_submit_trigger(submit_button)
 
 
 # Add a title to your Streamlit app with HTML markup and apply custom CSS
