@@ -35,6 +35,40 @@ div.stButton > button:first-child {
 }
 </style>
 """
+# download button custom css
+st.markdown(f"""
+    <style>
+      [class="css-9pe4jm edgvbvh9"]{{
+            display: inline-block;
+            padding: 5px 20px;
+            background-color: #ed9439;’
+            color: #C5DFF8;
+            width: 200px;
+            height: 35px;
+            margin-top: 20px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px; 
+            border-radius: 8px;’
+      }}
+      </style>
+    """
+    , unsafe_allow_html=True)
+# Apply HTML and CSS styling to the text input
+
+st.markdown(
+    f"""
+    <style>
+        div[data-baseweb="input"] input {{
+            background-color: white !important;
+            color: black;
+            caret-color: #111b2b !important;
+        }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 
 query_params = st.experimental_get_query_params()
 eid = query_params['__eid'][0]
@@ -43,9 +77,10 @@ eid = query_params['__eid'][0]
 def upload_image_to_eln_btn(file):
     file_name = st.text_input("Enter file name")
     file_name = file_name + ".png"
-    if st.button('Upload to ELN'):
-    #     with st.spinner('Uploading plot to ELN...'):
-        update_plot(eid = eid, file_name= file_name, file = plot_binary)
+    if file_name:
+        if st.button('Upload to ELN'):
+        #     with st.spinner('Uploading plot to ELN...'):
+            update_plot(eid = eid, file_name= file_name, file = plot_binary)
 
 
 
