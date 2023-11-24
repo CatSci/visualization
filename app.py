@@ -30,19 +30,51 @@ h1 {
     margin-top: -5rem;
     font-size: 24px;
 }
-div.stButton > button:first-child {
-    background-color: #ed9439;
-    color:#ffffff;
-}
+
 </style>
 """
+# download button custom css
+st.markdown(f"""
+    <style>
+      [class="css-9pe4jm edgvbvh9"]{{
+            display: inline-block;
+            padding: 5px 20px;
+            background-color: #ed9439;’
+            color: #C5DFF8;
+            width: 200px;
+            height: 35px;
+            margin-top: 20px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px; 
+            border-radius: 8px;’
+      }}
+      </style>
+    """
+    , unsafe_allow_html=True)
+
+# Apply HTML and CSS styling to the text input
+
+st.markdown(
+    f"""
+    <style>
+        div[data-baseweb="input"] input {{
+            background-color: white !important;
+            color: black;
+            caret-color: #111b2b !important;
+        }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 
 def download_btn(binary_image):
     file_name = st.text_input("Enter file name")
     if file_name:
         file_name = str(file_name) + ".png"
         plt.savefig(file_name)
-        btn = st.download_button(
+        st.download_button(
                     label="Download image",
                     data=binary_image,
                     file_name=file_name,
@@ -124,9 +156,6 @@ if uploaded_file is not None:
         y_column = st.sidebar.selectbox('Select Y-axis Column', list(df.select_dtypes(include=['int64', 'float64']).columns))
         if grouped_column and x_column and y_column:
             fig = create_stacked_bar_plot(df, grouped_column, x_column, y_column)
-            # byte_img = io.BytesIO()
-            # fig.write_image(file = byte_img, format = "png")
-            # download_btn(binary_image= byte_img)
             
         else:
             st.warning("Please select columns to plot data")

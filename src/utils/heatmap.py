@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from src.utils.utils import generate_colors
 import io 
-from src.eln.eln import update_plot, update_plot_plotly
 
 
 

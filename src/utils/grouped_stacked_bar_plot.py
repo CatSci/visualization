@@ -39,15 +39,13 @@ def create_stacked_bar_plot(dataframe, grouped_column, x_column, y_column):
                 marker_color=c,
                 textposition='inside',  # Adjust the position of text labels
                 width= 0.4,
+                texttemplate = "%{value:.2f}"
             ),
         )
 
     st.plotly_chart(fig)
     
-    # fig_bytes = fig.to_image(format="png")
-    # plot_binary = io.BytesIO(fig_bytes)
-    # plt.savefig(plot_binary, format='png')
-    # plot_binary.seek(0)
+
 
     return fig
 

@@ -10,11 +10,13 @@ import streamlit as st
 
 from dotenv import load_dotenv
 
+# load_dotenv(".env")
+# API_KEY = os.getenv("API_KEY")
+# API_BASE_URL = os.getenv("API_BASE_URL")
+API_KEY = st.secrets["API_KEY"]
+API_BASE_URL = st.secrets["API_BASE_URL"]
 
-API_KEY = os.getenv("API_KEY")
-API_BASE_URL = os.getenv("API_BASE_URL")
-
-def update_plot(path):
+def update_plot(eid, file, file_name):
     # Define headers
     headers = {
         'accept': 'application/vnd.api+json',
@@ -23,9 +25,9 @@ def update_plot(path):
     }
 
     try:
+        API_URL = API_BASE_URL + eid + "/children/" + file_name + "?force=true"
 
-        # with open(path, 'rb') as file:
-        response = requests.post(API_BASE_URL, headers=headers, data= path)
+        response = requests.post(API_URL, headers=headers, data= file)
 
         if response.status_code == 201:
             print("Success: The POST request was successful.")
@@ -35,23 +37,3 @@ def update_plot(path):
         print(f"Error: {str(e)}")
 
 
-def update_plot_plotly(file_path):
-    # Define headers
-    headers = {
-        'accept': 'application/vnd.api+json',
-        'x-api-key': API_KEY
-    }
-
-    #  # Read the file's content
-    # with open(file_path, 'rb') as image_file:
-    #     file_content = image_file.read()
-
-    # Create a POST request to upload the image with the file's content
-    files = {'image': ('image.png', file_path, 'image/png')}
-    response = requests.post(API_BASE_URL, headers=headers, files=files)
-
-    # Check if the upload was successful
-    if response.status_code == 201:
-        return True
-    else:
-        return False
